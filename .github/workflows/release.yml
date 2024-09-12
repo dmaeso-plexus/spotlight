@@ -14,22 +14,16 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v3
+    
     - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
+      uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}', github.event.inputs.version) }}
-        release_name: Release ${{ github.ref_type == 'tag' && github.ref_name || github.event.inputs.version }}
+        name: Release ${{ github.ref_type == 'tag' && github.ref_name || github.event.inputs.version }}
         draft: false
         prerelease: false
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/*.whl
-        asset_name: package.whl
-        asset_content_type: application/x-wheel+zip
+        files: ./dist/*.whl
