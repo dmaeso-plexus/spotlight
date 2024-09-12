@@ -5,7 +5,9 @@ name: CI
 # So in case of `pull_request` we check that HEAD is not 'Renumics/spotlight'.
 
 on:
-    - pull_request
+  push:
+    tags:
+      - 'v*'
 
 # As long as we use local actions, checkout should be made in workflow before
 # and not in the local actions. Otherwise, no action file found.
