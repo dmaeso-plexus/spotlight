@@ -176,13 +176,8 @@ jobs:
             - check-pr
             - check
             - build-test-matrix
-            - build-docs
-            - build-datasets
             - build-spotlight
             - check-wheel-contents
-            - unit-test
-            - integration-test
-            - ui-test
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
