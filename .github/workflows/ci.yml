@@ -8,6 +8,12 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release'
+        required: true
+        default: '0.1.0'
 
 # As long as we use local actions, checkout should be made in workflow before
 # and not in the local actions. Otherwise, no action file found.
