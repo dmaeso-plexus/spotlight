@@ -10,7 +10,9 @@ on:
         description: 'Version to release'
         required: true
         default: '0.1.0'
-
+        
+permissions:
+  contents: write
 jobs:
   # Prepare stage
   prepare-python:
