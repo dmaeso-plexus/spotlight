@@ -177,18 +177,12 @@ jobs:
             - build-test-matrix
             - build-spotlight
             - check-wheel-contents
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-            - name: '📤 Restore core Spotlight'
-              uses: actions/download-artifact@v4
-              with:
-                  name: renumics-spotlight-${{ needs.prepare-python.outputs.version }}
-                  path: dist
-            - name: '🚀 Publish Spotlight to PyPI'
-              uses: pypa/gh-action-pypi-publish@release/v1
-              with:
-                  password: ${{ secrets.PYPI_API_TOKEN }}
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: |
+            build/dist/renumics_spotlight*.whl
+            build/frontend/**/*
