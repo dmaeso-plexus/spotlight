@@ -166,23 +166,26 @@ jobs:
                   path: build/dist
             - name: Check wheel contents
               run: make check-wheel
-
+              
     release:
-        name: '🚀 Release Spotlight'
-        if: startsWith(github.ref, 'refs/tags/v') && github.repository == 'Renumics/spotlight'
-        needs:
+          name: '🚀 Release Spotlight'
+          runs-on: ubuntu-latest
+          if: startsWith(github.ref, 'refs/tags/v') && github.repository == 'Renumics/spotlight'
+          needs:
             - prepare-python
             - prepare-node
             - check-pr
             - build-test-matrix
             - build-spotlight
             - check-wheel-contents
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-          files: |
-            build/dist/renumics_spotlight*.whl
-            build/frontend/**/*
+          steps:
+            - name: Create Release
+              uses: softprops/action-gh-release@v1
+              with:
+                tag_name: ${{ github.ref_name }}
+                name: Release ${{ github.ref_name }}
+                draft: false
+                prerelease: false
+                files: |
+                  build/dist/renumics_spotlight*.whl
+                  build/frontend/**/*
