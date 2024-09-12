@@ -183,5 +183,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            build/dist/*.whl
-            build/frontend/**/*
+              build/dist/*.whl
+              build/frontend/*.js
+              build/frontend/*.css
+              build/frontend/*.d.ts
