@@ -175,6 +175,29 @@ jobs:
         with:
           name: renumics-spotlight-${{ needs.prepare-python.outputs.version }}
           path: build/dist
+      - name: Verify artifact contents
+        run: |
+          echo "Frontend artifact contents:"
+          find build/frontend -type f -exec ls -lh {} +
+          echo "Wheel artifact contents:"
+          find build/dist -type f -exec ls -lh {} +
+  
+      - name: Filter non-empty files
+        run: |
+          mkdir -p release_assets/frontend
+          mkdir -p release_assets/dist
+          find build/frontend -type f -not -empty \( -name "*.js" -o -name "*.css" -o -name "*.d.ts" \) -exec cp {} release_assets/frontend/ \;
+          find build/dist -type f -not -empty -name "*.whl" -exec cp {} release_assets/dist/ \;
+          echo "Files ready for release:"
+          find release_assets -type f -exec ls -lh {} +
+  
+      - name: Check for releasable assets
+        run: |
+          if [ -z "$(find release_assets -type f)" ]; then
+            echo "No non-empty files found for release. Aborting."
+            exit 1
+          fi
+  
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
@@ -183,7 +206,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-              build/dist/*.whl
-              build/frontend/*.js
-              build/frontend/*.css
-              build/frontend/*.d.ts
+            release_assets/dist/*
+            release_assets/frontend/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
