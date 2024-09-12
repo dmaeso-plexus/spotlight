@@ -2,10 +2,14 @@ name: Spotlight CI/CD
 
 on:
   push:
-    branches: [main]
-    tags: ['v*']
-  pull_request:
-    branches: [main]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release'
+        required: true
+        default: '0.1.0'
 
 jobs:
   # Prepare stage
@@ -172,8 +176,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}', github.event.inputs.version) }}
+          name: Release ${{ github.ref_type == 'tag' && github.ref_name || github.event.inputs.version }}
           draft: false
           prerelease: false
           files: |
